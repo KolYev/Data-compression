@@ -4,11 +4,10 @@ using namespace std;
 
 int main()
 {
-    //создаём лист
-    int arr[5]{6, 4, 2, 9, 7};
+    //создаём массив
+    char text[] = "Hello World";
     //создаём указатель на нулевой элемент массива
-    int *ptr = arr;
-
+    char *ptr = text;
 
     for (int i = 0; i < 5; i++)
     {
