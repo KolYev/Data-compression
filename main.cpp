@@ -1,6 +1,23 @@
 #include <iostream>
 using namespace std;
 
+// функция, удаляющая элементы массива, заполненные нулями
+void zero_zeros(int arr[], int& size) {
+    int new_size = 0;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (arr[i] != 0)
+        {
+            arr[new_size] = arr[i];
+            new_size++;
+        } 
+    }
+
+    size = new_size;
+    
+}
+
 int main()
 {
     // создаём массив
@@ -31,6 +48,8 @@ int main()
             { // управляющие символы
                 cout << "[" << i << "]: " << count[i] << endl;
             }
+        } else {
+
         }
     }
 
