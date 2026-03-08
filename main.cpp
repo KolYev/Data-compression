@@ -1,6 +1,15 @@
 #include <iostream>
 using namespace std;
 
+// структура узла
+struct Node
+{
+public:
+    int a;
+    char c;
+    Node *left, *right;
+};
+
 // функция, удаляющая элементы массива, заполненные нулями
 int zero_zeros(int arr[], int size) {
     int new_size = 0;
