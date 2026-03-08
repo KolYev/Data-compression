@@ -4,7 +4,6 @@ using namespace std;
 // структура узла
 struct Node
 {
-public:
     int a;
     char c;
     Node *left, *right;
