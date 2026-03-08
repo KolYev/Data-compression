@@ -9,6 +9,16 @@ struct Node
     Node *left, *right;
 };
 
+// функция создания узла
+Node* createNode(int value, char ch) {
+    Node* newNode = new Node;
+    newNode->a = value;
+    newNode->c = ch;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
 // функция, удаляющая элементы массива, заполненные нулями
 int zero_zeros(int arr[], int size) {
     int new_size = 0;
