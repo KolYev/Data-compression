@@ -2,7 +2,7 @@
 using namespace std;
 
 // функция, удаляющая элементы массива, заполненные нулями
-void zero_zeros(int arr[], int& size) {
+int zero_zeros(int arr[], int size) {
     int new_size = 0;
 
     for (int i = 0; i < size; i++)
@@ -15,6 +15,8 @@ void zero_zeros(int arr[], int& size) {
     }
 
     size = new_size;
+
+    return size;
     
 }
 
@@ -22,8 +24,6 @@ int main()
 {
     // создаём массив
     char text[] = "Hello World!!!!Hello World";
-    // создаём указатель на нулевой элемент массива
-    char *ptr = text;
 
     // массив для подсчёта
     int count[256] = {0};
@@ -36,15 +36,22 @@ int main()
         count[c]++;
     }
 
+    int size = zero_zeros(count, 256);
+    int *char_count = new int[size]; // массив, который хранит количество элементов каждого символа
+    int j = 0;
+
     for (int i = 0; i < 256; i++)
     {
         if (count[i] > 0)
         {
             if (i >= 32 && i <= 126) // печатные символы
             {
-                cout << char(i) << ": " << count[i] << endl;
+                char_count[j] = count[i];
+                cout << char(i) << ": " << char_count[j] << endl;
+                j++;
             }
             else
+            
             { // управляющие символы
                 cout << "[" << i << "]: " << count[i] << endl;
             }
@@ -52,6 +59,8 @@ int main()
 
         }
     }
+
+    delete[] char_count;
 
     return 0;
 }
