@@ -38,6 +38,7 @@ int main()
 
     int size = zero_zeros(count, 256);
     int *char_count = new int[size]; // массив, который хранит количество элементов каждого символа
+    char *char_el = new char[size]; // массив, который хранит каждый символ, который присутствовал в тексте
     int j = 0;
 
     for (int i = 0; i < 256; i++)
@@ -47,11 +48,11 @@ int main()
             if (i >= 32 && i <= 126) // печатные символы
             {
                 char_count[j] = count[i];
-                cout << char(i) << ": " << char_count[j] << endl;
+                char_el[j] = char(i);
+                cout << char_el[j] << ": " << char_count[j] << endl;
                 j++;
             }
             else
-            
             { // управляющие символы
                 cout << "[" << i << "]: " << count[i] << endl;
             }
@@ -61,6 +62,7 @@ int main()
     }
 
     delete[] char_count;
+    delete[] char_el;
 
     return 0;
 }
