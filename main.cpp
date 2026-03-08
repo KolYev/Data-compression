@@ -17,6 +17,28 @@ int zero_zeros(int arr[], int size) {
     size = new_size;
 
     return size;
+}
+
+// сортировка двух массивов по убыванию
+void arrays_sort(int arr1[], char arr2[], int size)
+{
+    for (int i = 0; i < size - 1; i++)
+    {
+        for (int j = 0; j < size - i - 1; j++)
+        {
+            if (arr1[j] < arr1[j+1])
+            {
+                arr1[j] = arr1[j] + arr1[j+1];
+                arr2[j] = arr2[j] + arr2[j+1];
+                arr1[j+1] = arr1[j] - arr1[j+1];
+                arr2[j+1] = arr2[j] - arr2[j+1];
+                arr1[j] = arr1[j] - arr1[j+1];
+                arr2[j] = arr2[j] - arr2[j+1];
+            }
+            
+        }
+        
+    }
     
 }
 
@@ -60,6 +82,9 @@ int main()
 
         }
     }
+
+    arrays_sort(char_count, char_el, size);
+    
 
     delete[] char_count;
     delete[] char_el;
