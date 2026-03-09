@@ -6,22 +6,24 @@ struct Node
 {
     int a;
     char c;
+    int direction;
     Node *left, *right;
 };
 
 // функция создания узла
-Node *createNode(int value, char ch)
+Node *createNode(int value, char ch, int dir)
 {
     Node *newNode = new Node;
     newNode->a = value;
     newNode->c = ch;
+    newNode->direction = dir;
     newNode->left = nullptr;
     newNode->right = nullptr;
     return newNode;
 }
 
 // рекурсивная функция построения дерева
-Node *Tree(int arr1[], char arr2[], int left, int right)
+Node *Tree(int arr1[], char arr2[], int left, int right, int direction = -1)
 {
     if (left > right)
     {
@@ -29,9 +31,9 @@ Node *Tree(int arr1[], char arr2[], int left, int right)
     }
 
     int mid = (left + right) / 2;
-    Node *node = createNode(arr1[mid], arr2[mid]);
-    node->left = Tree(arr1, arr2, left, mid - 1);
-    node->right = Tree(arr1, arr2, mid + 1, right);
+    Node *node = createNode(arr1[mid], arr2[mid], direction);
+    node->left = Tree(arr1, arr2, left, mid - 1, 0);
+    node->right = Tree(arr1, arr2, mid + 1, right, 1);
 
     return node;
 }
@@ -45,12 +47,14 @@ Node *Tree(int arr1[], char arr2[], int left, int right)
 //     }
 
 //     std::cout << prefix;
-//     std::cout << (isLeft ? "+-- " : "+-- ");
+//     if (root->direction == -1) {
+//         std::cout << "ROOT: ";
+//     } else {
+//         std::cout << "[" << (root->direction == 0 ? "LEFT" : "RIGHT") << "] ";
+//     }
+//     std::cout << root->a << "(" << root->c << ")" << std::endl;
 
-//     std::cout << "[" << root->a << ", " << root->c << "]" << std::endl;
-
-//     std::string newPrefix = prefix + (isLeft ? "|  " : "    ");
-
+//     std::string newPrefix = prefix + "  ";
 //     printTreeDetailed(root->left, newPrefix, true);
 //     printTreeDetailed(root->right, newPrefix, false);
 // }
