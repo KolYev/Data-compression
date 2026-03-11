@@ -38,6 +38,37 @@ Node *Tree(int arr1[], char arr2[], int left, int right, int direction = -1)
     return node;
 }
 
+void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256][256]) {
+    if (root == nullptr)
+    {
+        return;
+    }
+
+    if (root->left == nullptr && root->right == nullptr) {
+        for (int i = 0; i < depth; i++) {
+            codes_table[(unsigned char)root->c][i] = path[i];
+        }
+        codes_table[(unsigned char)root->c][depth] = '\0';
+        return;
+    }
+
+    // рекурсивный обход левого и правого поддерева
+    path[depth] = '0';
+    EncryptionMessage(root->left, path, depth + 1, codes_table);
+
+    path[depth] = '1';
+    EncryptionMessage(root->right, path, depth + 1, codes_table);
+}
+
+// вывод сжатого сообщения
+void ConciseMessage(const char* originalText, char codes_table[256][256]) {
+    for (int i = 0; originalText[i] != '\0'; i++) {
+        unsigned char symbol = originalText[i];
+        cout << codes_table[symbol];
+    }
+    cout << endl;
+}
+
 // освобождаем память дерева
 void DeleteTree(Node* root) {
     if (root == nullptr)
@@ -152,6 +183,15 @@ int main()
     Node *root = Tree(char_count, char_el, 0, size - 1);
     // std::cout << "Tree Structure:" << std::endl;
     // printTreeDetailed(root);
+
+    char codes_table[256][256] = {0};
+    char path[256];
+
+    EncryptionMessage(root, path, 0, codes_table);
+
+    cout << "Original: " << text << endl;
+    cout << "Concise Message: ";
+    ConciseMessage(text, codes_table);
 
     DeleteTree(root);
     delete[] char_count;
