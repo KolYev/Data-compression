@@ -11,29 +11,30 @@ struct Node
 };
 
 // функция создания узла
-Node *createNode(int value, char ch, int dir)
+Node *createNode(int value, char ch)
 {
     Node *newNode = new Node;
     newNode->a = value;
     newNode->c = ch;
-    newNode->direction = dir;
     newNode->left = nullptr;
     newNode->right = nullptr;
     return newNode;
 }
 
 // рекурсивная функция построения дерева
-Node *Tree(int arr1[], char arr2[], int left, int right, int direction = -1)
-{
-    if (left > right)
-    {
-        return nullptr;
+Node *Tree(int arr1[], char arr2[], int left, int right) {
+    if (left > right) return nullptr;
+
+    if (left == right) {
+        return createNode(arr1[left], arr2[left]);
     }
 
+    Node *node = createNode(0, '\0'); 
     int mid = (left + right) / 2;
-    Node *node = createNode(arr1[mid], arr2[mid], direction);
-    node->left = Tree(arr1, arr2, left, mid - 1, 0);
-    node->right = Tree(arr1, arr2, mid + 1, right, 1);
+
+    // Рекурсивно делим массив, пока не дойдем до отдельных символов
+    node->left = Tree(arr1, arr2, left, mid);
+    node->right = Tree(arr1, arr2, mid + 1, right);
 
     return node;
 }
@@ -60,6 +61,23 @@ void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256]
     EncryptionMessage(root->right, path, depth + 1, codes_table);
 }
 
+void Decompress(Node* root, const char* encodedMessage) {
+    Node* current = root;
+    for (int i = 0; encodedMessage[i] != '\0'; i++) {
+        if (encodedMessage[i] == '0') {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+
+        if (!current->left && !current->right) {
+            cout << current->c;
+            current = root;
+        }
+    }
+    cout << endl;
+}
+
 // вывод сжатого сообщения
 void ConciseMessage(const char* originalText, char codes_table[256][256]) {
     for (int i = 0; originalText[i] != '\0'; i++) {
@@ -83,26 +101,6 @@ void DeleteTree(Node* root) {
     
 }
 
-// void printTreeDetailed(Node *root, std::string prefix = "", bool isLeft = true)
-// {
-//     if (root == nullptr)
-//     {
-//         std::cout << prefix << "+- null" << std::endl;
-//         return;
-//     }
-
-//     std::cout << prefix;
-//     if (root->direction == -1) {
-//         std::cout << "ROOT: ";
-//     } else {
-//         std::cout << "[" << (root->direction == 0 ? "LEFT" : "RIGHT") << "] ";
-//     }
-//     std::cout << root->a << "(" << root->c << ")" << std::endl;
-
-//     std::string newPrefix = prefix + "  ";
-//     printTreeDetailed(root->left, newPrefix, true);
-//     printTreeDetailed(root->right, newPrefix, false);
-// }
 
 // функция, удаляющая элементы массива, заполненные нулями
 int zero_zeros(int arr[], int size)
@@ -181,17 +179,25 @@ int main()
     arrays_sort(char_count, char_el, size);
 
     Node *root = Tree(char_count, char_el, 0, size - 1);
-    // std::cout << "Tree Structure:" << std::endl;
-    // printTreeDetailed(root);
 
     char codes_table[256][256] = {0};
     char path[256];
-
     EncryptionMessage(root, path, 0, codes_table);
 
-    cout << "Original: " << text << endl;
-    cout << "Concise Message: ";
+    char compressed[1024] = ""; 
+    int pos = 0;
+    for (int i = 0; text[i] != '\0'; i++) {
+        char* code = codes_table[(unsigned char)text[i]];
+        for (int k = 0; code[k] != '\0'; k++) compressed[pos++] = code[k];
+    }
+    compressed[pos] = '\0';
+
+    cout << "1. Original: " << text << endl;
+    cout << "2. Concise Message: ";
     ConciseMessage(text, codes_table);
+
+    cout << "3. Decompressed: ";
+    Decompress(root, compressed);
 
     DeleteTree(root);
     delete[] char_count;
