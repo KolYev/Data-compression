@@ -38,6 +38,20 @@ Node *Tree(int arr1[], char arr2[], int left, int right, int direction = -1)
     return node;
 }
 
+// освобождаем память дерева
+void DeleteTree(Node* root) {
+    if (root == nullptr)
+    {
+        return;
+    }
+
+    DeleteTree(root->left);
+    DeleteTree(root->right);
+
+    delete root;
+    
+}
+
 // void printTreeDetailed(Node *root, std::string prefix = "", bool isLeft = true)
 // {
 //     if (root == nullptr)
@@ -130,13 +144,6 @@ int main()
                 cout << char_el[j] << ": " << char_count[j] << endl;
                 j++;
             }
-            else
-            { // управляющие символы
-                cout << "[" << i << "]: " << count[i] << endl;
-            }
-        }
-        else
-        {
         }
     }
 
@@ -146,6 +153,7 @@ int main()
     // std::cout << "Tree Structure:" << std::endl;
     // printTreeDetailed(root);
 
+    DeleteTree(root);
     delete[] char_count;
     delete[] char_el;
 
