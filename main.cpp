@@ -18,7 +18,7 @@ private:
     int compressedSize; // размер сжатого сообщения
 
 public:
-    DataCompression()
+    DataCompression() : root(nullptr), compressedMessage(nullptr), compressedSize(0)
     {
         for (int i = 0; i < 256; i++) {
             for (int j = 0; j < 256; j++) {
@@ -30,6 +30,7 @@ public:
     ~DataCompression()
     {
         DeleteTree(root);
+        delete[] compressedMessage;
     }
 
     // функция создания узла
