@@ -26,6 +26,12 @@ public:
             }
         }
     }
+
+    ~DataCompression()
+    {
+        DeleteTree(root);
+    }
+
     // функция создания узла
     Node *createNode(int value, char ch)
     {
@@ -218,7 +224,6 @@ int main()
     cout << "3. Decompressed: ";
     data.Decompress(root, compressed);
 
-    data.DeleteTree(root);
     delete[] char_count;
     delete[] char_el;
 
