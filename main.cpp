@@ -10,36 +10,38 @@ struct Node
     Node *left, *right;
 };
 
-// функция создания узла
-Node *createNode(int value, char ch)
-{
-    Node *newNode = new Node;
-    newNode->a = value;
-    newNode->c = ch;
-    newNode->left = nullptr;
-    newNode->right = nullptr;
-    return newNode;
-}
-
-// рекурсивная функция построения дерева
-Node *Tree(int arr1[], char arr2[], int left, int right) {
-    if (left > right) return nullptr;
-
-    if (left == right) {
-        return createNode(arr1[left], arr2[left]);
+class DataCompression {
+public:
+    // функция создания узла
+    Node *createNode(int value, char ch)
+    {
+        Node *newNode = new Node;
+        newNode->a = value;
+        newNode->c = ch;
+        newNode->left = nullptr;
+        newNode->right = nullptr;
+        return newNode;
     }
 
-    Node *node = createNode(0, '\0'); 
-    int mid = (left + right) / 2;
+    // рекурсивная функция построения дерева
+    Node *Tree(int arr1[], char arr2[], int left, int right) {
+        if (left > right) return nullptr;
 
-    // Рекурсивно делим массив, пока не дойдем до отдельных символов
-    node->left = Tree(arr1, arr2, left, mid);
-    node->right = Tree(arr1, arr2, mid + 1, right);
+        if (left == right) {
+            return createNode(arr1[left], arr2[left]);
+        }
 
-    return node;
-}
+        Node *node = createNode(0, '\0'); 
+        int mid = (left + right) / 2;
 
-void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256][256]) {
+        // Рекурсивно делим массив, пока не дойдем до отдельных символов
+        node->left = Tree(arr1, arr2, left, mid);
+        node->right = Tree(arr1, arr2, mid + 1, right);
+
+        return node;
+    }
+
+    void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256][256]) {
     if (root == nullptr)
     {
         return;
@@ -61,88 +63,91 @@ void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256]
     EncryptionMessage(root->right, path, depth + 1, codes_table);
 }
 
-void Decompress(Node* root, const char* encodedMessage) {
-    Node* current = root;
-    for (int i = 0; encodedMessage[i] != '\0'; i++) {
-        if (encodedMessage[i] == '0') {
-            current = current->left;
-        } else {
-            current = current->right;
+    void Decompress(Node* root, const char* encodedMessage) {
+        Node* current = root;
+        for (int i = 0; encodedMessage[i] != '\0'; i++) {
+            if (encodedMessage[i] == '0') {
+                current = current->left;
+            } else {
+                current = current->right;
+            }
+
+            if (!current->left && !current->right) {
+                cout << current->c;
+                current = root;
+            }
         }
-
-        if (!current->left && !current->right) {
-            cout << current->c;
-            current = root;
-        }
+        cout << endl;
     }
-    cout << endl;
-}
-
-// вывод сжатого сообщения
-void ConciseMessage(const char* originalText, char codes_table[256][256]) {
-    for (int i = 0; originalText[i] != '\0'; i++) {
-        unsigned char symbol = originalText[i];
-        cout << codes_table[symbol];
-    }
-    cout << endl;
-}
-
-// освобождаем память дерева
-void DeleteTree(Node* root) {
-    if (root == nullptr)
-    {
-        return;
-    }
-
-    DeleteTree(root->left);
-    DeleteTree(root->right);
-
-    delete root;
-    
-}
-
-
-// функция, удаляющая элементы массива, заполненные нулями
-int zero_zeros(int arr[], int size)
-{
-    int new_size = 0;
-
-    for (int i = 0; i < size; i++)
-    {
-        if (arr[i] != 0)
+    // освобождаем память дерева
+    void DeleteTree(Node* root) {
+        if (root == nullptr)
         {
-            arr[new_size] = arr[i];
-            new_size++;
+            return;
         }
+
+        DeleteTree(root->left);
+        DeleteTree(root->right);
+
+        delete root;
+        
     }
 
-    size = new_size;
-
-    return size;
-}
-
-// сортировка двух массивов по убыванию
-void arrays_sort(int arr1[], char arr2[], int size)
-{
-    for (int i = 0; i < size - 1; i++)
+    // функция, удаляющая элементы массива, заполненные нулями
+    int zero_zeros(int arr[], int size)
     {
-        for (int j = 0; j < size - i - 1; j++)
+        int new_size = 0;
+
+        for (int i = 0; i < size; i++)
         {
-            if (arr1[j] < arr1[j + 1])
+            if (arr[i] != 0)
             {
-                arr1[j] = arr1[j] + arr1[j + 1];
-                arr2[j] = arr2[j] + arr2[j + 1];
-                arr1[j + 1] = arr1[j] - arr1[j + 1];
-                arr2[j + 1] = arr2[j] - arr2[j + 1];
-                arr1[j] = arr1[j] - arr1[j + 1];
-                arr2[j] = arr2[j] - arr2[j + 1];
+                arr[new_size] = arr[i];
+                new_size++;
+            }
+        }
+
+        size = new_size;
+
+        return size;
+    }
+
+    // сортировка двух массивов по убыванию
+    void arrays_sort(int arr1[], char arr2[], int size)
+    {
+        for (int i = 0; i < size - 1; i++)
+        {
+            for (int j = 0; j < size - i - 1; j++)
+            {
+                if (arr1[j] < arr1[j + 1])
+                {
+                    arr1[j] = arr1[j] + arr1[j + 1];
+                    arr2[j] = arr2[j] + arr2[j + 1];
+                    arr1[j + 1] = arr1[j] - arr1[j + 1];
+                    arr2[j + 1] = arr2[j] - arr2[j + 1];
+                    arr1[j] = arr1[j] - arr1[j + 1];
+                    arr2[j] = arr2[j] - arr2[j + 1];
+                }
             }
         }
     }
-}
+
+    // вывод сжатого сообщения
+    void ConciseMessage(const char* originalText, char codes_table[256][256]) {
+        for (int i = 0; originalText[i] != '\0'; i++) {
+            unsigned char symbol = originalText[i];
+            cout << codes_table[symbol];
+        }
+        cout << endl;
+    }
+};
+
+
+
 
 int main()
 {
+    DataCompression data;
     // создаём массив
     char text[] = "Hello World!!!!Hello World";
 
@@ -157,7 +162,7 @@ int main()
         count[c]++;
     }
 
-    int size = zero_zeros(count, 256);
+    int size = data.zero_zeros(count, 256);
     int *char_count = new int[size]; // массив, который хранит количество элементов каждого символа
     char *char_el = new char[size];  // массив, который хранит каждый символ, который присутствовал в тексте
     int j = 0;
@@ -176,13 +181,13 @@ int main()
         }
     }
 
-    arrays_sort(char_count, char_el, size);
+    data.arrays_sort(char_count, char_el, size);
 
-    Node *root = Tree(char_count, char_el, 0, size - 1);
+    Node *root = data.Tree(char_count, char_el, 0, size - 1);
 
     char codes_table[256][256] = {0};
     char path[256];
-    EncryptionMessage(root, path, 0, codes_table);
+    data.EncryptionMessage(root, path, 0, codes_table);
 
     char compressed[1024] = ""; 
     int pos = 0;
@@ -194,12 +199,12 @@ int main()
 
     cout << "1. Original: " << text << endl;
     cout << "2. Concise Message: ";
-    ConciseMessage(text, codes_table);
+    data.ConciseMessage(text, codes_table);
 
     cout << "3. Decompressed: ";
-    Decompress(root, compressed);
+    data.Decompress(root, compressed);
 
-    DeleteTree(root);
+    data.DeleteTree(root);
     delete[] char_count;
     delete[] char_el;
 
