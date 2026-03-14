@@ -11,7 +11,21 @@ struct Node
 };
 
 class DataCompression {
+private:
+    Node* root; // корень дерева
+    char codesTable[256][256]; // таблица кодов для символов
+    char* compressedMessage; // сжатое сообщение
+    int compressedSize; // размер сжатого сообщения
+
 public:
+    DataCompression()
+    {
+        for (int i = 0; i < 256; i++) {
+            for (int j = 0; j < 256; j++) {
+                codesTable[i][j] = '\0';
+            }
+        }
+    }
     // функция создания узла
     Node *createNode(int value, char ch)
     {
