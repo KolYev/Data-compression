@@ -13,18 +13,21 @@ struct Node
     Node *left, *right;
 };
 
-class DataCompression {
+class DataCompression
+{
 private:
-    Node* root; // корень дерева
+    Node *root;                // корень дерева
     char codesTable[256][256]; // таблица кодов для символов
-    char* compressedMessage; // сжатое сообщение
-    int compressedSize; // размер сжатого сообщения
+    char *compressedMessage;   // сжатое сообщение
+    int compressedSize;        // размер сжатого сообщения
 
 public:
     DataCompression() : root(nullptr), compressedMessage(nullptr), compressedSize(0)
     {
-        for (int i = 0; i < 256; i++) {
-            for (int j = 0; j < 256; j++) {
+        for (int i = 0; i < 256; i++)
+        {
+            for (int j = 0; j < 256; j++)
+            {
                 codesTable[i][j] = '\0';
             }
         }
@@ -48,14 +51,17 @@ public:
     }
 
     // рекурсивная функция построения дерева
-    Node *Tree(int arr1[], char arr2[], int left, int right) {
-        if (left > right) return nullptr;
+    Node *Tree(int arr1[], char arr2[], int left, int right)
+    {
+        if (left > right)
+            return nullptr;
 
-        if (left == right) {
+        if (left == right)
+        {
             return createNode(arr1[left], arr2[left]);
         }
 
-        Node *node = createNode(0, '\0'); 
+        Node *node = createNode(0, '\0');
         int mid = (left + right) / 2;
 
         // Рекурсивно делим массив, пока не дойдем до отдельных символов
@@ -65,29 +71,33 @@ public:
         return node;
     }
 
-    void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256][256]) {
-    if (root == nullptr)
+    void EncryptionMessage(Node *root, char path[], int depth, char codes_table[256][256])
     {
-        return;
-    }
-
-    if (root->left == nullptr && root->right == nullptr) {
-        for (int i = 0; i < depth; i++) {
-            codes_table[(unsigned char)root->c][i] = path[i];
+        if (root == nullptr)
+        {
+            return;
         }
-        codes_table[(unsigned char)root->c][depth] = '\0';
-        return;
+
+        if (root->left == nullptr && root->right == nullptr)
+        {
+            for (int i = 0; i < depth; i++)
+            {
+                codes_table[(unsigned char)root->c][i] = path[i];
+            }
+            codes_table[(unsigned char)root->c][depth] = '\0';
+            return;
+        }
+
+        // рекурсивный обход левого и правого поддерева
+        path[depth] = '0';
+        EncryptionMessage(root->left, path, depth + 1, codes_table);
+
+        path[depth] = '1';
+        EncryptionMessage(root->right, path, depth + 1, codes_table);
     }
 
-    // рекурсивный обход левого и правого поддерева
-    path[depth] = '0';
-    EncryptionMessage(root->left, path, depth + 1, codes_table);
-
-    path[depth] = '1';
-    EncryptionMessage(root->right, path, depth + 1, codes_table);
-}
-
-    void Decompress(Node* root, const char* encodedMessage) {
+    void Decompress(Node *root, const char *encodedMessage)
+    {
         // fout.open("CompressedFile.txt");
         // if (!fout.is_open())
         // {
@@ -103,32 +113,36 @@ public:
 
         // fout.close();
 
-        
-        Node* current = root;
+        Node *current = root;
         fout.open("DecompressedFile.txt");
         if (!fout.is_open())
         {
-            cout<< "Open file error!"<<endl;
+            cout << "Open file error!" << endl;
         }
-        else{
-            for (int i = 0; encodedMessage[i] != '\0'; i++) {
-            if (encodedMessage[i] == '0') {
-                current = current->left;
-            } else {
-                current = current->right;
-            }
+        else
+        {
+            for (int i = 0; encodedMessage[i] != '\0'; i++)
+            {
+                if (encodedMessage[i] == '0')
+                {
+                    current = current->left;
+                }
+                else
+                {
+                    current = current->right;
+                }
 
-            if (!current->left && !current->right) {
-                fout << current->c;
-                current = root;
+                if (!current->left && !current->right)
+                {
+                    fout << current->c;
+                    current = root;
+                }
             }
         }
-        }
-        
-        
     }
     // освобождаем память дерева
-    void DeleteTree(Node* root) {
+    void DeleteTree(Node *root)
+    {
         if (root == nullptr)
         {
             return;
@@ -138,7 +152,6 @@ public:
         DeleteTree(root->right);
 
         delete root;
-        
     }
 
     // функция, удаляющая элементы массива, заполненные нулями
@@ -181,25 +194,37 @@ public:
     }
 
     // запись сжатого сообщения в файл
-    void ConciseMessage(const char* originalText, char codes_table[256][256]) {
+    void ConciseMessage(const char *originalText, char codes_table[256][256])
+    {
         fout.open("CompressedFile.bin", ios::binary);
         if (!fout.is_open())
         {
             return;
         }
 
-        for (int i = 0; originalText[i] != '\0'; i++) {
-            unsigned char symbol = originalText[i];
-            fout << codes_table[symbol];
+        unsigned char buffer = 0;
+        int bitCount = 0;
+        for (int i = 0; originalText[i]; i++)
+        {
+            for (char *code = codes_table[(unsigned char)originalText[i]]; *code; code++)
+            {
+                buffer = (buffer << 1) | (*code - '0');
+                if (++bitCount == 8)
+                {
+                    fout.write((char *)&buffer, 1);
+                    buffer = 0;
+                    bitCount = 0;
+                }
+            }
         }
-
+        if (bitCount)
+        {
+            buffer <<= (8 - bitCount);
+            fout.write((char *)&buffer, 1);
+        }
         fout.close();
-        
     }
 };
-
-
-
 
 int main()
 {
@@ -245,11 +270,13 @@ int main()
     char path[256];
     data.EncryptionMessage(root, path, 0, codes_table);
 
-    char compressed[1024] = ""; 
+    char compressed[1024] = "";
     int pos = 0;
-    for (int i = 0; text[i] != '\0'; i++) {
-        char* code = codes_table[(unsigned char)text[i]];
-        for (int k = 0; code[k] != '\0'; k++) compressed[pos++] = code[k];
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        char *code = codes_table[(unsigned char)text[i]];
+        for (int k = 0; code[k] != '\0'; k++)
+            compressed[pos++] = code[k];
     }
     compressed[pos] = '\0';
 
