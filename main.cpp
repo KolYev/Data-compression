@@ -98,40 +98,22 @@ public:
 
     void Decompress(Node *root, const char *encodedMessage)
     {
-        // fout.open("CompressedFile.txt");
-        // if (!fout.is_open())
-        // {
-        //     cout<< "Open file error!"<<endl;
-        // }
-        // else
-        // {
-        //     for (int i = 0; originalText[i] != '\0'; i++) {
-        //     unsigned char symbol = originalText[i];
-        //     fout << codes_table[symbol];
-        // }
-        // }
-
-        // fout.close();
+        ifstream fin("CompressedFile.bin", ios::binary);
+        fout.open("DecompressedFile.txt");
+        if (!fin.is_open())
+        {
+            return;
+        }
 
         Node *current = root;
-        fout.open("DecompressedFile.txt");
-        if (!fout.is_open())
+        unsigned char byte;
+        int bitPos = 7;
+        while (fin.read((char *)&byte, 1))
         {
-            cout << "Open file error!" << endl;
-        }
-        else
-        {
-            for (int i = 0; encodedMessage[i] != '\0'; i++)
+            for (int i = 7; i >= 0; i--)
             {
-                if (encodedMessage[i] == '0')
-                {
-                    current = current->left;
-                }
-                else
-                {
-                    current = current->right;
-                }
-
+                bool bit = (byte >> i) & 1;
+                current = bit ? current->right : current->left;
                 if (!current->left && !current->right)
                 {
                     fout << current->c;
@@ -139,7 +121,10 @@ public:
                 }
             }
         }
+        fin.close();
+        fout.close();
     }
+    
     // освобождаем память дерева
     void DeleteTree(Node *root)
     {
