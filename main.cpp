@@ -154,14 +154,9 @@ public:
         }
     }
 
-    // вывод сжатого сообщения
+    // запись сжатого сообщения в файл
     void ConciseMessage(const char* originalText, char codes_table[256][256]) {
         ofstream fout;
-        for (int i = 0; originalText[i] != '\0'; i++) {
-            unsigned char symbol = originalText[i];
-            cout << codes_table[symbol];
-        }
-        cout << endl;
         fout.open("CompressedFile.txt");
         if (!fout.is_open())
         {
@@ -169,7 +164,10 @@ public:
         }
         else
         {
-            fout<<"Открытие файла прошло успешно";
+            for (int i = 0; originalText[i] != '\0'; i++) {
+            unsigned char symbol = originalText[i];
+            fout << codes_table[symbol];
+        }
         }
 
         fout.close();
