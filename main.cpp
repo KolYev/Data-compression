@@ -220,8 +220,6 @@ int main()
     // массив для подсчёта
     int count[256] = {0};
 
-    cout << text << endl;
-
     for (int i = 0; text[i] != '\0'; i++)
     {
         unsigned char c = text[i];
@@ -241,7 +239,6 @@ int main()
             {
                 char_count[j] = count[i];
                 char_el[j] = char(i);
-                cout << char_el[j] << ": " << char_count[j] << endl;
                 j++;
             }
         }
@@ -265,11 +262,8 @@ int main()
     }
     compressed[pos] = '\0';
 
-    cout << "1. Original: " << text << endl;
-    cout << "2. Concise Message: ";
     data.ConciseMessage(text, codes_table);
 
-    cout << "3. Decompressed: ";
     data.Decompress(root, compressed);
 
     delete[] char_count;
