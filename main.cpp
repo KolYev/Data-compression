@@ -2,6 +2,8 @@
 #include <fstream>
 using namespace std;
 
+ofstream fout;
+
 // структура узла
 struct Node
 {
@@ -86,8 +88,30 @@ public:
 }
 
     void Decompress(Node* root, const char* encodedMessage) {
+        // fout.open("CompressedFile.txt");
+        // if (!fout.is_open())
+        // {
+        //     cout<< "Open file error!"<<endl;
+        // }
+        // else
+        // {
+        //     for (int i = 0; originalText[i] != '\0'; i++) {
+        //     unsigned char symbol = originalText[i];
+        //     fout << codes_table[symbol];
+        // }
+        // }
+
+        // fout.close();
+
+        
         Node* current = root;
-        for (int i = 0; encodedMessage[i] != '\0'; i++) {
+        fout.open("DecompressedFile.txt");
+        if (!fout.is_open())
+        {
+            cout<< "Open file error!"<<endl;
+        }
+        else{
+            for (int i = 0; encodedMessage[i] != '\0'; i++) {
             if (encodedMessage[i] == '0') {
                 current = current->left;
             } else {
@@ -95,11 +119,13 @@ public:
             }
 
             if (!current->left && !current->right) {
-                cout << current->c;
+                fout << current->c;
                 current = root;
             }
         }
-        cout << endl;
+        }
+        
+        
     }
     // освобождаем память дерева
     void DeleteTree(Node* root) {
@@ -156,7 +182,6 @@ public:
 
     // запись сжатого сообщения в файл
     void ConciseMessage(const char* originalText, char codes_table[256][256]) {
-        ofstream fout;
         fout.open("CompressedFile.txt");
         if (!fout.is_open())
         {
