@@ -182,17 +182,15 @@ public:
 
     // запись сжатого сообщения в файл
     void ConciseMessage(const char* originalText, char codes_table[256][256]) {
-        fout.open("CompressedFile.txt");
+        fout.open("CompressedFile.bin", ios::binary);
         if (!fout.is_open())
         {
-            cout<< "Open file error!"<<endl;
+            return;
         }
-        else
-        {
-            for (int i = 0; originalText[i] != '\0'; i++) {
+
+        for (int i = 0; originalText[i] != '\0'; i++) {
             unsigned char symbol = originalText[i];
             fout << codes_table[symbol];
-        }
         }
 
         fout.close();
