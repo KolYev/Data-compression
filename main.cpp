@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 // структура узла
@@ -155,11 +156,24 @@ public:
 
     // вывод сжатого сообщения
     void ConciseMessage(const char* originalText, char codes_table[256][256]) {
+        ofstream fout;
         for (int i = 0; originalText[i] != '\0'; i++) {
             unsigned char symbol = originalText[i];
             cout << codes_table[symbol];
         }
         cout << endl;
+        fout.open("CompressedFile.txt");
+        if (!fout.is_open())
+        {
+            cout<< "Open file error!"<<endl;
+        }
+        else
+        {
+            fout<<"Открытие файла прошло успешно";
+        }
+
+        fout.close();
+        
     }
 };
 
