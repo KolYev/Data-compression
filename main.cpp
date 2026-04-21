@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 ofstream fout;
@@ -214,8 +215,13 @@ public:
 int main()
 {
     DataCompression data;
-    // создаём массив
-    char text[] = "Hello World!!!!Hello World";
+
+    string input;
+
+    cout<< "Enter the text: ";
+    getline(cin, input);
+
+    const char* text = input.c_str();
 
     // массив для подсчёта
     int count[256] = {0};
