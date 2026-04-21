@@ -221,6 +221,20 @@ int main()
     cout<< "Enter the text: ";
     getline(cin, input);
 
+    ofstream origFile("Original.txt");
+    if (origFile.is_open())
+    {
+        origFile << input;
+        origFile.close();
+    }
+    ifstream origCheck("Original.txt", ios::binary | ios::ate);
+    if (origCheck.is_open())
+    {
+        streamsize origSize = origCheck.tellg();
+        cout << "Original.txt size: " << origSize << " bytes" << endl;
+        origCheck.close();
+    }
+
     const char* text = input.c_str();
 
     // массив для подсчёта
@@ -270,7 +284,23 @@ int main()
 
     data.ConciseMessage(text, codes_table);
 
+    ifstream compCheck("CompressedFile.bin", ios::binary | ios::ate);
+    if (compCheck.is_open())
+    {
+        streamsize compSize = compCheck.tellg();
+        cout << "CompressedFile.bin size: " << compSize << " bytes" << endl;
+        compCheck.close();
+    }
+
     data.Decompress(root, compressed);
+
+    ifstream decompCheck("DecompressedFile.txt", ios::binary | ios::ate);
+    if (decompCheck.is_open())
+    {
+        streamsize decompSize = decompCheck.tellg();
+        cout << "DecompressedFile.txt size: " << decompSize << " bytes" << endl;
+        decompCheck.close();
+    }
 
     delete[] char_count;
     delete[] char_el;
